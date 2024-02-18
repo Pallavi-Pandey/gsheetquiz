@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Form</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Custom CSS */
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+
+    .form-label {
+      font-weight: bold;
+    }
+
+    .form-control {
+      border-radius: 5px;
+    }
+
+    #msg {
+      color: green;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">Add Question</h1>
+
+    <form id="quizForm">
+      <div class="mb-3">
+        <label for="question" class="form-label">Question</label>
+        <input type="text" class="form-control" id="question" name="question" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="options" class="form-label">Options (JSON Format)</label>
+        <textarea class="form-control" id="options" name="answers" required></textarea>
+        <small id="optionsHelp" class="form-text text-muted">Example:<br>
+          [ <br>
+          { text: 'Option1', correct: false }, <br>
+          { text: 'Option2', correct: true }, <br>
+          { text: 'Option3', correct: false }, <br>
+          { text: 'Option4', correct: false } <br>
+          ] <br>
+        </small>
+      </div>
+      <button type="submit" id="sub" class="btn btn-primary">Submit</button>
+    </form>
+
+    <h6 id="msg" style="display: none;">Question added!</h6>
+  </div>
+
+  <!-- Bootstrap JS (Optional if you don't use JS functionality) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let form = document.getElementById("quizForm");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      let data = new FormData(form);
+      fetch('https://script.google.com/macros/s/AKfycbz15GOZdCA_dJpe-mjl5gN9-gCNPlfHQJ-eTfHG-FAaxf5Wvwus21aHZgHaoueXy17D/exec', {
+        method: 'POST',
+        body: data,
+        credentials: 'include'
+      })
+          .then(res => {
+            console.log("######################")
+            console.log('Response:', res);
+            if (res.ok) {
+              document.querySelector("#msg").style.display = "block";
+              setTimeout(() => {
+                location.reload(); // Reload the page after 2 seconds
+              }, 2000);
+            } else {
+              throw new Error('Failed to add question.');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again later.');
+          });
+      });
+  </script>
+</body>
+
+</html>
